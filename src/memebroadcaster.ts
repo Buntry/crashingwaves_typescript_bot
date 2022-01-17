@@ -10,12 +10,12 @@ const SOURCE_CHANNELS : MemeChannel[] = [
     //{"server": "932539452482547814", "channel": "932539453308809218"}
 ]
 const BROADCAST_CHANNELS : MemeChannel[] = [
-    {"server": "782423463393755138", "channel": "829230702822031362"}
+    {"server": "782423463393755138", "channel": "782427225689554964"}
     //{"server": "932539452482547814", "channel": "932539531381587988"}
 ]
 
 // Time between every meme load
-const MEME_TIMER = Duration.fromObject({ minutes: 1 }).toMillis()
+const MEME_TIMER = Duration.fromObject({ minutes: 20 }).toMillis()
 
 export default class MemeBroadcaster implements ClientFunction {
 
@@ -40,7 +40,7 @@ export default class MemeBroadcaster implements ClientFunction {
     }
 
     postLatestMemesFromChannel(client : Client<boolean>, channel : BaseGuildTextChannel, memeChannel : MemeChannel) : void {
-        channel.messages.fetch({ after: this.snowflakes.get(memeChannel) })
+        channel.messages.fetch({ after: this.snowflakes.get(memeChannel), limit: 2 })
             .then(messages => this.postMessages(client, messages, memeChannel))
     }
 
@@ -49,7 +49,7 @@ export default class MemeBroadcaster implements ClientFunction {
         .forEach((message, snowflake) => {
             // set the latest message datetime so we don't repost memes
             const messageDateTime = DateTime.fromMillis(message.createdTimestamp)
-            if (messageDateTime > (this.timestamps.get(memeChannel) || 0)) {
+            if (messageDateTime > this.timestamps.get(memeChannel)) {
                 this.timestamps.set(memeChannel, messageDateTime)
                 this.snowflakes.set(memeChannel, snowflake)
             }
