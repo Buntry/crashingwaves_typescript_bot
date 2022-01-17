@@ -12,8 +12,10 @@
     "postinstall": "npm run build"
   },
   "keywords": [],
-  "author": "",
+  "author": "parker griep",
   "license": "ISC",
+  "engines": { "node": ">=0.15" },
+  "engineStrict": true,
   "devDependencies": {
     "@types/lodash": "^4.14.178",
     "@types/luxon": "^2.0.9",

@@ -1,5 +1,6 @@
 import { Client } from "discord.js"
 import MemeBroadcaster from "./memebroadcaster"
+import UptimeManager from "./uptimemanager"
 
 export interface ClientFunction {
     handleClient(client : Client) : void
@@ -8,7 +9,8 @@ export interface ClientFunction {
 export class CrashingBot {
 
     private static clientHandlers : ClientFunction[] = [
-        new MemeBroadcaster()
+        new MemeBroadcaster(),
+        new UptimeManager()
     ]
     private client : Client
 

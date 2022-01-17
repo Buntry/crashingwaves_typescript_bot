@@ -15,7 +15,7 @@ const BROADCAST_CHANNELS : MemeChannel[] = [
 ]
 
 // Time between every meme load
-const MEME_TIMER = Duration.fromObject({ minutes: 30 }).toMillis()
+const MEME_TIMER = Duration.fromObject({ minutes: 1 }).toMillis()
 
 export default class MemeBroadcaster implements ClientFunction {
 
