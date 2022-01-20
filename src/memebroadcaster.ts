@@ -15,7 +15,8 @@ const BROADCAST_CHANNELS : MemeChannel[] = [
 ]
 
 // Time between every meme load
-const MEME_TIMER = Duration.fromObject({ minutes: 20 }).toMillis()
+const MEME_TIMER = Duration.fromObject({ minutes: 10 }).toMillis()
+const MEME_LIMIT = 10
 
 export default class MemeBroadcaster implements ClientFunction {
 
@@ -35,12 +36,14 @@ export default class MemeBroadcaster implements ClientFunction {
     } 
 
     listenToMemeChannel(client : Client<boolean>, memeChannel : MemeChannel) : void {
+        console.log(`Listening to memes at ${DateTime.now().toHTTP()}`)
+
         this.getMemeChannel(client, memeChannel)
             .then(channel => this.postLatestMemesFromChannel(client, channel, memeChannel))
     }
 
     postLatestMemesFromChannel(client : Client<boolean>, channel : BaseGuildTextChannel, memeChannel : MemeChannel) : void {
-        channel.messages.fetch({ after: this.snowflakes.get(memeChannel), limit: 2 })
+        channel.messages.fetch({ after: this.snowflakes.get(memeChannel), limit: MEME_LIMIT })
             .then(messages => this.postMessages(client, messages, memeChannel))
     }
 
@@ -49,6 +52,9 @@ export default class MemeBroadcaster implements ClientFunction {
         .forEach((message, snowflake) => {
             // set the latest message datetime so we don't repost memes
             const messageDateTime = DateTime.fromMillis(message.createdTimestamp)
+
+            console.log(`Posting meme at ${DateTime.now().toHTTP()}`)
+
             if (messageDateTime > this.timestamps.get(memeChannel)) {
                 this.timestamps.set(memeChannel, messageDateTime)
                 this.snowflakes.set(memeChannel, snowflake)
